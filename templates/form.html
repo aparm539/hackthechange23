@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Laptop Price Predictor</title>
+        <meta name="description" content="Prices">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <h1>Laptop Price Prediction</h1>
+        <form id="laptop-form" action="/predict_price" method="post"> 
+
+
+            <label for="os">Operating System:</label><br>
+            <select id="os" name="os">
+                <option value="Windows">Windows 10</option>
+                <option value="Windows">Windows 11</option>
+                <option value="Mac">Mac OS</option>
+                <option value="Chrome">Chrome OS</option>
+            </select><br>
+
+            <label for="displayType">Display Type:</label><br>
+            <select id="displayType" name="displayType"><br>
+                <option value="IPS">IPS</option>
+                <option value="OLED">OLED</option>
+                <option value="VA">VA</option>
+                <option value="TN">TN</option>
+            </select><br>
+
+            <label for="resolution">Resolution:</label><br>
+            <select id="resolution" name="resolution"><br>
+                <option value="FHD">FHD</option>
+                <option value="QHD">QHD</option>
+                <option value="UHD">UHD</option>
+                <option value="WQHD">WQHD</option>
+                <option value="HD">HD</option>
+            </select><br>
+
+            <label for="cpuBrand">CPU Brand:</label><br>
+            <select  id="cpuBrand" name="cpuBrand"><br>
+                <option value="Intel">Intel</option>
+                <option value="AMD">AMD</option>
+                <option value ="Apple">Apple</option>
+            </select><br>
+
+            <label for="cpuModel">CPU Model:</label><br>
+            <input type="text" id="cpuModel" name="cpuModel"><br>
+
+            <label for="ram">RAM (GB):</label><br>
+            <input type="number" id="ram" name="ram"><br>
+
+            <label for="storage">Storage (GB):</label><br>
+            <input type="number" id="storage" name="storage"><br>
+
+            <label for="displaySize">Display Size (inches):</label><br>
+            <input type="number" id="displaySize" name="displaySize" step="0.1"><br>
+
+            <label for="refreshRate">Refresh Rate (Hz):</label><br>
+            <input type="number" id="refreshRate" name="refreshRate"><br>
+
+            <label for="storageType">Storage Type:</label><br>
+            <select id="storageType" name="storageType">
+                <option value="HDD">HDD</option>
+                <option value="SSD">SSD</option>
+                <option value="PCIESDDGEN3">PCIE SDD Gen 3</option>
+                <option value="PCIESDDGEN4">PCIE SDD Gen 4</option>
+                <option value="PCIESDDGEN5">PCIE SDD Gen 5</option>
+            </select>
+
+            <input type="submit" value="Predict Price">
+        </form>
+
+        
+        <p id="prediction-result"></p>
+
+        <script>
+            document.getElementById('laptop-form').onsubmit = async function(event) {
+                event.preventDefault();
+                let formData = new FormData(event.target);
+                let data = Object.fromEntries(formData.entries());
+                let response = await fetch('/predict_price', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                if (response.ok){
+                    let result = await response.json();
+                    document.getElementById('prediction-result').innerText = 'Predicted Price: ' + result.predicted_price;
+                }
+                else{
+                    document.getElementById('prediction-result').innerText = 'Error' ;
+                }
+            };
+        </script>
+    </body>
+</html>
